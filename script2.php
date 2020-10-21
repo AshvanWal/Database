@@ -19,8 +19,8 @@ try {
     $conn->SetAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "<br>";
 	echo "Connected successfully to " . $servername1;
-	echo "<br>";
-	echo "SHOW SLAVE STATUS";
+	    echo "<br>";
+    echo "SHOW SLAVE STATUS";
 	$result = $conn->query('SHOW SLAVE STATUS');
 	$colcount = $result->columnCount();
 
@@ -163,28 +163,39 @@ try {
         echo "SHOW SLAVE STATUS";
         $result = $conn->query('SHOW SLAVE STATUS');
         $colcount = $result->columnCount();
-
-        echo "<pre style='display:inline;'>";
-        // Get coluumn headers
-        echo("<table style='border: solid 1px black;'><tr>");
-        echo ('<table><tr>');
-        for ($i = 0; $i < $colcount; $i++){
+        $rowcount = $result->rowCount();
+ 
+        
+        if ($rowcount == 0) {
+            echo("0 rows");
+        }else{
+            for ($i = 0; $i < $colcount; $i++){
                 $meta = $result->getColumnMeta($i)["name"];
-                echo('<th style="border: solid 1px black;">' . $meta . '</th>');
+                echo("<td style='border: solid 1px black;'>" . $row[$meta] . '</td>');
         }
-        echo('</tr>');
+        
+        for ($i = 0; $i < $colcount; $i++){
+            $meta = $result->getColumnMeta($i)["name"];
+            echo("<td style='border: solid 1px black;'>" . $meta  . '</td>');
+        }
 
-        // Get row data
-        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                echo('<tr>');
-                for ($i = 0; $i < $colcount; $i++){
-                        $meta = $result->getColumnMeta($i)["name"];
-                        echo("<td style='border: solid 1px black;'>" . $row[$meta] . '</td>');
-                }
-                echo('</tr>');
-        }
+        // //Get row data
+        // while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+        //         echo('<tr>');
+        //         for ($i = 0; $i < $colcount; $i++){
+        //                 $meta = $result->getColumnMeta($i)["name"];
+        //                 echo("<td style='border: solid 1px black;'>" . $row[$meta] . '</td>');
+        //         }
+        //         echo('</tr>');
+        // }
+
+
 
         echo ('</table>');
+
+        else{
+            echo "<br>" .$rowcount." row<br>";
+        }
 }
 catch(PDOException $e)
         {
@@ -295,10 +306,6 @@ catch(PDOException $e)
         {
         echo "Connection failed: " . $e->getMessage();
         }
-echo "<br>";
-echo <<<HTML
-</body>
-</html>
-HTML;
+
 
 ?>
